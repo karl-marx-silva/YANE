@@ -1,0 +1,136 @@
+"""#     THIS IS YANE TERMINAL, USE WITH MODERATION    #"""
+import os
+import glob
+import shutil
+import subprocess
+if os.name == 'nt':
+    base_dir = 'C:\\driver\\'
+else: 
+    base_dir = '/driver/'
+if not os.path.exists(base_dir):
+    os.makedirs(base_dir)
+ABOUT = """
+    ##        YANE TERMINAL        ##
+    #   INDEV VERSION               #
+    #   CREATED IN: 06/06/2024      #
+    #   CREATED BY: LORD_12         #
+    #   COMMANDS:                   #
+    #   ECHO  ABOUT TEST SHUT CL NF #
+    #   CD    PD    MK    D  LS TH  #
+"""
+LOGO = """
+    !!!!!  !!!!!    !!!!!
+    !!!!!  !!!!!    !!!!!
+    !!!!!!!!!!!!    !!!!!
+     !!!!!!!!!!     !!!!!
+        !!!!       
+        !!!!
+        !!!!
+        !!!!       !!!!!!!
+        !!!!      !!!!!!!!!
+        !!!!       !!!!!!!
+"""
+def echo_command(text):
+    """Prints the provided text."""
+    print(text)
+def about_command():
+    """Prints information about Yane Terminal."""
+    print(ABOUT)
+def test_command():
+    """Prints a test message."""
+    print("Hello from Yane Terminal!")
+def clear_command():
+    """Clears the terminal screen."""
+    print('\033c', end='')
+def logo_command():
+    """Prints the Yane Terminal logo."""
+    print(LOGO)
+def change_directory_up_command(levels, base_dir):
+    """Changes the current working directory up 'levels' number of times."""
+    if levels == '':
+        levels = 1
+    else:
+        levels = int(levels)
+    new_dir = os.getcwd()
+    for _ in range(levels):
+        parent_dir = os.path.dirname(new_dir)
+        if parent_dir.lower().startswith(base_dir.lower()):
+            new_dir = parent_dir
+        else:
+            new_dir = base_dir
+            break
+    os.chdir(new_dir)
+
+def print_directory_command():
+    """Prints the current working directory."""
+    print(os.getcwd())
+def make_directory_command(dir_name):
+    """Creates a new directory."""
+    os.mkdir(dir_name)
+def delete_command(path):
+    """Deletes a file or directory."""
+    if os.path.isfile(path):
+        os.remove(path)  
+    elif os.path.isdir(path):
+        shutil.rmtree(path)  
+    else:
+        print(f"No such file or directory: {path}")
+def list_command():
+    """Lists directories and files in the current directory."""
+    dirs = sorted(glob.glob('*/'))  
+    for dir in dirs:
+        print(dir)
+    files = sorted(glob.glob('*'))  
+    for file in files:
+        if os.path.isfile(file):
+            print(file)
+def touch_command(file_path):
+    """Creates an empty file or updates the timestamp of the file."""
+    with open(file_path, 'a', encoding='utf-8') as file: 
+        file.close()
+def run_external_command(command, base_dir):
+    """Runs an external shell command."""
+    subprocess.run(command, shell=True, cwd=base_dir)
+def run(line, base_dir):
+    if line.startswith('echo'):
+        echo_command(line[5:])
+    elif line.startswith('about'):
+        about_command()
+    elif line.startswith('test'):
+        test_command()
+    elif line.startswith('cl'):
+        clear_command()
+    elif line.startswith('nf'):
+        logo_command()
+    elif line.startswith('cd '):
+        path = line[3:]
+        if path == '..':
+            change_directory_up_command('', base_dir)
+        elif path.startswith('..'):
+            levels = path[2:]
+            change_directory_up_command(levels, base_dir)
+        else:
+            try:
+                new_path = os.path.join(os.getcwd(), path)
+                os.chdir(new_path)
+            except OSError as e:
+                print(f"Error: {e}")
+    elif line.startswith('pd'):
+        print_directory_command()
+    elif line.startswith('mk'):
+        make_directory_command(line[3:])
+    elif line.startswith('d'):
+        delete_command(line[2:])
+    elif line.startswith('ls'):
+        list_command()
+    elif line.startswith('th'):
+        touch_command(line[3:])
+    elif line.startswith('!'):
+        run_external_command(line[1:].strip(), base_dir)
+INP = str(input(": "))
+INP = INP.lower()
+os.chdir(base_dir)
+while INP != 'shut':
+    run(INP, base_dir)
+    INP = str(input(": "))
+    INP = INP.lower()

@@ -1,0 +1,37 @@
+Yane manual
+
+###############################
+##    creatd in 15/06/2024   ##
+###############################
+
+all comamands:
+
+echo args - print args
+
+about - tells about the yane and its comamands
+
+test - prints Hello from Yane Terminal!
+
+shut - exit shell
+
+cl - clears screen (ansi)
+
+nf - shows logo
+
+cd path - go to path
+
+cd .. - go to parent diretory
+
+cd ..n - go back n parent's diretory
+
+pd - gets the current diretory and prints it
+
+mk - make diretory
+
+d - deletes path
+
+ls - prints all folders first, then files all alphabeticly
+
+th - creates files
+
+!... - execute command   ***warning: it may provide security risks***
